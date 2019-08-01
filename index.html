@@ -162,11 +162,11 @@
       gtag('js', new Date());
       gtag('config', 'UA-131802216-1');
       
-      const links = document.getElementsByTagName('a');
+      var links = document.getElementsByTagName('a');
 
-      const clickWithTimeout = (href) => {
-        let called = false;
-        const callback = () => {
+      var clickHandler = function (href) {
+        var called = false;
+        var callback = function () {
           if (!called) {
             called = true;
             window.location.href = href;
@@ -176,11 +176,18 @@
         return callback;
       }
 
-      for (let link of links) {
-        link.addEventListener('click', (event) => {
+      var attachHandler = function (link) {
+        link.addEventListener('click', function (event) {
           event.preventDefault();
-          gtag('event', 'view_item', { event_label: link.title, event_callback: clickWithTimeout(link.href) });
-        })
+          gtag('event', 'view_item', { event_label: link.title, event_callback: clickHandler(link.href) });
+        });
+      }
+
+      var i = 0;
+      var linkCount = links.length;
+      
+      for (i = 0; i < linkCount; i++) {
+        attachHandler(links[i]);
       }
     </script>
   </body>
